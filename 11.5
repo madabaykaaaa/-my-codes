@@ -1,0 +1,27 @@
+class Solution{
+    public static boolean isWeekend(String dayName){
+        if (dayName.equals("Sunday") || dayName.equals("Saturday")){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public static int weekendCount(String[] days) {
+        int week = 0;
+        for (int i = 0; i < days.length; i++) {
+            if (isWeekend(days[i])) {
+                week++;
+            }
+        }
+        return week;
+    }
+    public static int weekdayCount(String[] days) {
+        int week = 0;
+        for (int i = 0; i < days.length; i++) {
+            if (!isWeekend(days[i])) {
+                week++;
+            }
+        }
+        return week;
+    }
+}
