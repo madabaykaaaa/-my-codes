@@ -1,0 +1,22 @@
+class Solution {
+    public static class Student {
+        protected final String studying;
+
+        protected Student(String work) {
+            this.studying = work;
+        }
+        public Student() {
+            this.studying = "I'm studying.";
+        }
+        public void study() {
+            System.out.println("I am busy. " + studying);
+        }
+    }
+    public static class LazyStudent extends Student {
+        @Override
+        public void study() {
+            System.out.println("I did not study today. I am lazy");
+        }
+    }
+
+}
