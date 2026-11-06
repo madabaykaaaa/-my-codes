@@ -1,0 +1,19 @@
+class Solution {
+    static class Car implements AutoCloseable {
+        @Override
+        public void close() {
+            System.out.println("Shutting down the car...");
+        }
+
+        public void drive() {
+            System.out.println("The car started driving.");
+        }
+    }
+
+    public static void main(String[] args) {
+        try (Car car = new Car()) {
+            car.drive();
+        } catch (RuntimeException e) {
+        }
+    }
+}
