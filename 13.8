@@ -1,0 +1,25 @@
+class Solution {
+    public static void moveRobot(RobotConnectionManager connectionManager, int toX, int toY) {
+        int value = 3;
+        for (int i = 1; i <= value; i++) {
+            RobotConnection connection = null;
+            try {
+                connection = connectionManager.getConnection();
+                connection.moveRobotTo(toX, toY);
+                return;
+            } catch (RobotConnectionException e) {
+                if (i == 3) {
+                    throw e;
+                }
+            } finally {
+                if (connection != null) {
+                    try {
+                        connection.close();
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
+        }
+    }
+}
