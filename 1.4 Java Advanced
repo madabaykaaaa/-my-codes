@@ -1,0 +1,9 @@
+import java.util.logging.Logger;
+
+class Solution {
+    public static void logging() {
+        Logger logger = Logger.getLogger("Task_4_3_7")
+        logger.info("Program execution completed without errors");
+        logger.warning("Error occurred");
+    }
+}
