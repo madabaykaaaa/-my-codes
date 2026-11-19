@@ -1,0 +1,14 @@
+class Solution {
+    public static void  main(String[] args) {
+        java.util.Scanner scanner = new java.util.Scanner(System.in);
+        double sum = 0;
+        while (scanner.hasNext()) {
+            String word = scanner.next();
+            try {
+                sum += Double.parseDouble(word);
+            } catch (NumberFormatException e) {
+            }
+        }
+        System.out.printf(java.util.Locale.US, "%.6f%n", sum);
+    }
+}
