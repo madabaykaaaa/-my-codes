@@ -1,0 +1,11 @@
+class Solution {
+    public static String readAsString(InputStream inputStream, Charset charset) throws IOException {
+        int value;
+        java.io.ByteArrayOutputStream outputStream = new java.io.ByteArrayOutputStream();
+        while ((value = inputStream.read()) != -1 ) {
+            outputStream.write(value);
+        }
+        return new String(outputStream.toByteArray(), charset);
+
+    }
+}
