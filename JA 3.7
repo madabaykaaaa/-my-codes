@@ -1,0 +1,134 @@
+class Solution {
+
+    public static final String AUSTIN_POWERS = "Austin Powers";
+    public static final String WEAPONS = "weapons";
+    public static final String BANNED_SUBSTANCE = "banned substance";
+
+    public static class UntrustworthyMailWorker implements MailService {
+
+        private final RealMailService realMailService;
+        private final MailService[] workers;
+
+        public UntrustworthyMailWorker(MailService[] workers) {
+            this.workers = workers;
+            this.realMailService = new RealMailService();
+        }
+
+        public RealMailService getRealMailService() {
+            return realMailService;
+        }
+
+        @Override
+        public Sendable processMail(Sendable mail) {
+            for (MailService worker : workers) {
+                mail = worker.processMail(mail);
+            }
+
+            return realMailService.processMail(mail);
+        }
+    }
+
+    public static class Spy implements MailService {
+
+        private final Logger logger;
+
+        public Spy(Logger logger) {
+            this.logger = logger;
+        }
+
+        @Override
+        public Sendable processMail(Sendable mail) {
+
+            if (mail instanceof MailMessage) {
+                MailMessage mailMessage = (MailMessage) mail;
+
+                if (mail.getFrom().equals(AUSTIN_POWERS)
+                        || mail.getTo().equals(AUSTIN_POWERS)) {
+
+                    logger.log(Level.WARNING,
+                            "Detected target mail correspondence: from "
+                                    + mail.getFrom() + " to "
+                                    + mail.getTo() + " \""
+                                    + mailMessage.getMessage() + "\"");
+
+                } else {
+                    logger.log(Level.INFO,
+                            "Usual correspondence: from "
+                                    + mail.getFrom() + " to " + mail.getTo());
+                }
+            }
+
+            return mail;
+        }
+    }
+
+    public static class Thief implements MailService {
+
+        private final int minPrice;
+        private int stolenValue = 0;
+
+        public Thief(int minPrice) {
+            this.minPrice = minPrice;
+        }
+
+        public int getStolenValue() {
+            return stolenValue;
+        }
+
+        @Override
+        public Sendable processMail(Sendable mail) {
+
+            if (mail instanceof MailPackage) {
+                MailPackage mailPackage = (MailPackage) mail;
+                Package content = mailPackage.getContent();
+
+                if (content.getPrice() >= minPrice) {
+
+                    stolenValue += content.getPrice();
+
+                    Package stolenPackage = new Package(
+                            "stones instead of " + content.getContent(),
+                            0
+                    );
+
+                    return new MailPackage(
+                            mail.getFrom(),
+                            mail.getTo(),
+                            stolenPackage
+                    );
+                }
+            }
+
+            return mail;
+        }
+    }
+
+    public static class Inspector implements MailService {
+
+        @Override
+        public Sendable processMail(Sendable mail) {
+
+            if (mail instanceof MailPackage) {
+                MailPackage mailPackage = (MailPackage) mail;
+                String content = mailPackage.getContent().getContent();
+
+                if (content.contains(WEAPONS)
+                        || content.contains(BANNED_SUBSTANCE)) {
+                    throw new IllegalPackageException();
+                }
+
+                if (content.contains("stones")) {
+                    throw new StolenPackageException();
+                }
+            }
+
+            return mail;
+        }
+    }
+
+    public static class IllegalPackageException extends RuntimeException {
+    }
+
+    public static class StolenPackageException extends RuntimeException {
+    }
+}
