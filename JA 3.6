@@ -1,0 +1,21 @@
+class Solution {
+    public static Animal[] deserializeAnimalArray(byte[] data) {
+        try (ObjectInputStream ani = new ObjectInputStream(
+                new ByteArrayInputStream(data)
+        )) {
+            int size = ani.readInt();
+            if (size < 0) {
+                throw new IllegalArgumentException();
+            }
+            Animal[] animals = new Animal[size];
+            for (int i = 0; i < size; i++) {
+                animals[i] = (Animal) ani.readObject();
+            }
+            return animals;
+        } catch (IOException | ClassNotFoundException e) {
+            throw new IllegalArgumentException(e);
+        } catch (ClassCastException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+}
